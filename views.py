@@ -1,30 +1,34 @@
 from django.shortcuts import render
-from feedback.models import Feedback
-from park.models import Park
+from login.models import Login
+
+
 # Create your views here.
-import datetime
+def login(request):
+    if request.method == "POST":
+        uname = request.POST.get("name")
+        passw = request.POST.get("psw")
+        obj = Login.objects.filter(username=uname, password=passw)
+        tp = ""
+        for ob in obj:
+            tp = ob.type
+            uid = ob.u_id
+            if tp == "admin":
+                request.session["u_id"] = uid
+                return render(request, 'temp/admin.html')
+            elif tp == "user":
+                request.session["u_id"] = uid
+                return render(request, 'temp/user.html')
+            elif tp == "staff":
+                request.session["u_id"] = uid
+                return render(request, 'temp/staff.html')
+        objlist = "username or password incorrect....please try again....!"
+        context = {
+            'msg': objlist,
+        }
+        return render(request, 'login/login.html', context)
+    return render(request, 'login/login.html')
 
-def postfdbk(request):
-    obj = Park.objects.all()
-    context = {
-        'objval': obj
-    }
-    ss= request.session["u_id"]
 
-    if request.method=='POST':
-        ob=Feedback()
-        ob.u_id=ss
-        # ob.s_id=request.POST.get('s1')
-        ob.feedback=request.POST.get('fd')
-        ob.date=datetime.date.today()
-        ob.time=datetime.datetime.now()
-        ob.save()
-    return render(request,'feedback/post.html',context)
+from django.shortcuts import render
 
-
-def vwfd(request):
-    obj=Feedback.objects.all()
-    context={
-        'objval':obj
-    }
-    return render(request,'feedback/view.html',context)
+# Create your views here.

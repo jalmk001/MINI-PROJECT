@@ -1,9 +1,7 @@
 from django.conf.urls import url
 
-from feedback import views
-
+from login import views
 
 urlpatterns=[
-    url('pstfd/',views.postfdbk),
-    url('vfd/',views.vwfd)
+    url('log/',views.login)
 ]
