@@ -1,34 +1,61 @@
 from django.shortcuts import render
-from login.models import Login
-
-
+from park.models import Park
+from django.core.files.storage import FileSystemStorage
 # Create your views here.
-def login(request):
-    if request.method == "POST":
-        uname = request.POST.get("name")
-        passw = request.POST.get("psw")
-        obj = Login.objects.filter(username=uname, password=passw)
-        tp = ""
-        for ob in obj:
-            tp = ob.type
-            uid = ob.u_id
-            if tp == "admin":
-                request.session["u_id"] = uid
-                return render(request, 'temp/admin.html')
-            elif tp == "user":
-                request.session["u_id"] = uid
-                return render(request, 'temp/user.html')
-            elif tp == "staff":
-                request.session["u_id"] = uid
-                return render(request, 'temp/staff.html')
-        objlist = "username or password incorrect....please try again....!"
-        context = {
-            'msg': objlist,
-        }
-        return render(request, 'login/login.html', context)
-    return render(request, 'login/login.html')
+
+def postslt(request):
+    if request.method=='POST':
+        ob=Park()
+        # ob.status='available'
+        ob.amount=request.POST.get('amnt')
+        myfile=request.FILES['slot']
+        fs=FileSystemStorage()
+        filename=fs.save(myfile.name,myfile)
+        ob.slot=myfile.name
+        # ob.time=request.POST.get('tym')
+        # ob.exit=request.POST.get('etym')
+        ob.save()
+    return render(request,'park/postsl.html')
 
 
-from django.shortcuts import render
+def vslot(request):
+    obj=Park.objects.all()
+    context={
+        'objval':obj
+    }
+    return render(request,'park/view.html',context)
 
-# Create your views here.
+
+
+
+def vavailable(request):
+    obj=Park.objects.filter(status='available')
+    context={
+        'objval':obj
+    }
+    return render(request,'park/available.html',context)
+
+def manageslot(request):
+    obj=Park.objects.filter(status='available')
+    context={
+        'objval':obj
+    }
+    return render(request,'park/manage.html',context)
+
+def update(request,idd):
+    obj = Park.objects.get(s_id=idd)
+    context = {
+        'objval': obj
+    }
+    if request.method=='POST':
+        ob=Park.objects.get(s_id=idd)
+        ob.status='available'
+        ob.amount=request.POST.get('amnt')
+        myfile=request.FILES['slot']
+        fs=FileSystemStorage()
+        filename=fs.save(myfile.name,myfile)
+        ob.slot=myfile.name
+        # ob.time=request.POST.get('tym')
+
+        ob.save()
+    return render(request,'park/update.html',context)

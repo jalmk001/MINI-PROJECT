@@ -1,7 +1,13 @@
 from django.conf.urls import url
 
-from login import views
+from park import views
+
 
 urlpatterns=[
-    url('log/',views.login)
+    url('pstsl/',views.postslt),
+    url('vsl/',views.vslot),
+    url('vwav/', views.vavailable),
+    url('mng/', views.manageslot),
+    url('updt/(?P<idd>\w+)',views.update,name="sup")
+
 ]

@@ -12,16 +12,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Login',
+            name='Park',
             fields=[
-                ('l_id', models.AutoField(primary_key=True, serialize=False)),
-                ('username', models.CharField(max_length=100)),
-                ('password', models.CharField(max_length=100)),
-                ('type', models.CharField(max_length=100)),
-                ('u_id', models.IntegerField()),
+                ('s_id', models.AutoField(primary_key=True, serialize=False)),
+                ('slot', models.CharField(max_length=300)),
+                ('status', models.CharField(max_length=100)),
+                ('amount', models.CharField(max_length=100)),
             ],
             options={
-                'db_table': 'login',
+                'db_table': 'park',
                 'managed': False,
             },
         ),
